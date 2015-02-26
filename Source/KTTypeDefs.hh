@@ -4,7 +4,9 @@
 #include <utility>
 #include <vector>
 #include <ostream>
+#include <iomanip>
 #include <cassert>
+#include <cmath>
 
 #include "KTAdjacencyList.hh"
 
@@ -44,7 +46,17 @@ namespace KT
   }
 
   typedef std::vector<Position> Solution;
-  typedef std::vector<Solution> SolutionSet;
+
+  inline std::ostream& operator<<(std::ostream& s,const Solution& sln)
+  {
+    for (unsigned i=0;i<sln.size();i++)
+    {
+      s<<sln[i];
+      if (i != sln.size()-1)
+	s<<" ==> ";
+    }
+    return s;
+  }
 
 }
   
