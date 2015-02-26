@@ -33,7 +33,7 @@ int main(int argc,char** argv)
     {"frequency", required_argument, 0, 'q'},
   };
 
-  static const char *optString = "hi:f:r:q:";
+  static const char *optString = "hif:r:q:";
 
   gRank = 6;
   gFile = 6;
