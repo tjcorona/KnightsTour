@@ -53,7 +53,7 @@ namespace KT
 	std::cout<<"length of tour: "<<solution.size()<<std::endl;
       }
     }
-    while (FindPattern() || (requireFullTour && solution.size() != (*fPositionList).size()));
+    while (FindPattern() || solution.empty() || (requireFullTour && solution.size() != (*fPositionList).size()+1));
 
     std::cout<<"Convergent!"<<std::endl;
 

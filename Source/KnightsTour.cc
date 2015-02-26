@@ -1,3 +1,4 @@
+#include <getopt.h>
 #include <iostream>
 #include <unistd.h>
 
@@ -8,60 +9,70 @@
 
 using namespace KT;
 
-int main(int /*argc*/,char** /*argv*/)
+int main(int argc,char** argv)
 {
-  unsigned boardSize = 6;
+  std::string usage =
+    "\n"
+    "Usage: KnightsTour <options>\n"
+    "\n"
+    "This program searches for knight's tours using a neural network.\n"
+    "\n"
+    "\tAvailable options:\n"
+    "\t -h, --help              (shows this message and exits)\n"
+    "\t -f, --file              (set the file size of the puzzle)\n"
+    "\t -r, --rank              (set the rank size of the puzzle)\n"
+    "\t -i, --incomplete-tour   (allow an incomplete tour)\n"
+    "\t -q, --frequency         (frequency in Hz of solution display)\n"
+    ;
 
-  gRank = boardSize;
-  gFile = boardSize;
+  static struct option longOptions[] = {
+    {"help", no_argument, 0, 'h'},
+    {"incomplete-tour", no_argument, 0, 'i'},
+    {"file", required_argument, 0, 'f'},
+    {"rank", required_argument, 0, 'r'},
+    {"frequency", required_argument, 0, 'q'},
+  };
 
-  // gRank = 3;
-  // gFile = 4;
+  static const char *optString = "hi:f:r:q:";
 
-  // {
-  //   Solution s;
+  gRank = 6;
+  gFile = 6;
 
-  //   for (unsigned i=0;i<KT::gRank*KT::gFile;i++)
-  //     s.push_back(Position(i));
+  bool requireFullTour = true;
+  double frequency = 4.;
   
-  //   PrintSolution(s,4.);
-  // }
-  
-  // {
-  //   KnightGraph graph;
-
-  //   // graph.Print();
-  //   // PrintKnightGraph(graph,4.);
-
-  //   for (unsigned i=0;i<graph.GetMoveList().size();i++)
-  //   {
-  //     std::cout<<graph.GetMoveList()[i].index<<" : ";
-  //     for (unsigned j=0;j<graph.GetMoveList()[i].neighbors();j++)
-  //     {
-  // 	std::cout<<graph.GetMoveList()[i][j].index<<" ";
-  //     }
-  //     std::cout<<std::endl;
-  //   }
-
-  //   // for (unsigned i=0;i<graph.GetMoveList().size();i++)
-  //   // {
-  //   //   std::cout<<graph.GetMoveList()[i]<<" : ";
-  //   //   for (unsigned j=0;j<graph.GetMoveList()[i].neighbors();j++)
-  //   //   {
-  //   // 	std::cout<<graph.GetMoveList()[i][j]<<" ";
-  //   //   }
-  //   //   std::cout<<std::endl;
-  //   // }
-
-  //   // PrintKnightGraph2(graph,5.e-1);
-  // }
-
-  {
-    KnightGraph graph;
-    NeuralNetwork neuralNetwork;
-    Solution solution = neuralNetwork.FindTour(graph);
-    PrintSolution(solution,2.);
+  while(1) {
+    char optId = getopt_long(argc, argv,optString, longOptions, NULL);
+    if(optId == -1) break;
+    switch(optId) {
+    case('h'): // help
+      std::cout<<usage<<std::endl;
+      return 0;
+    case('i'):
+      requireFullTour = false;
+      break;
+    case('f'):
+      gFile = atoi(optarg);
+      break;
+    case('r'):
+      gRank = atoi(optarg);
+      break;
+    case('t'):
+      gRank = atoi(optarg);
+      break;
+    case('q'):
+      frequency = atof(optarg);
+      break;
+    default: // unrecognized option
+      std::cout<<usage<<std::endl;
+      return 1;
+    }
   }
+
+  KnightGraph graph;
+  NeuralNetwork neuralNetwork;
+  Solution solution = neuralNetwork.FindTour(graph,requireFullTour);
+  PrintSolution(solution,frequency);
   
   return 0;
 }

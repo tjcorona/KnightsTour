@@ -165,11 +165,11 @@ namespace KT
       s<<"Position "<<std::setw(maxSpacing)<<++counter<<": "<<*it;
       mvprintw(0,0,"%s",s.str().c_str());
 
-      PrintPosition(*it,'1'+offset);
+      PrintPosition(*it);
       usleep(usec);
     }
-    timeout(-1);
-    int c = getch();
+    // timeout(-1);
+    // int c = getch();
     endwin();
   }
 }
