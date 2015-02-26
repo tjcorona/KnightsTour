@@ -39,7 +39,7 @@ namespace KT
 	for (unsigned i=0;i<(*fMoveList).size();i++)
 	  UpdateOutput(i);
 	fIteration++;
-	if (fIteration > 10000)
+	if (fIteration > fMaxIterations)
 	  break;
       }
 

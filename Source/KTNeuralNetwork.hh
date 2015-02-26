@@ -9,8 +9,10 @@ namespace KT
   class NeuralNetwork
   {
   public:
-    NeuralNetwork() : fIteration(0), fHistoryLength(10) {}
+    NeuralNetwork() : fIteration(0), fHistoryLength(20), fMaxIterations(1.e5) {}
     virtual ~NeuralNetwork() {}
+
+    void SetMaxIterations(unsigned m) { fMaxIterations = m; }
 
     Solution FindTour(const KnightGraph& graph,bool requireFullTour=false);
 
@@ -21,7 +23,8 @@ namespace KT
     std::vector<bool> fOutput;
     unsigned fHistoryLength;
     std::vector<bool> fHistory;
-
+    unsigned fMaxIterations;
+    
     void UpdateState(unsigned neuron);
     void UpdateOutput(unsigned neuron);
 

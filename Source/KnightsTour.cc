@@ -22,6 +22,7 @@ int main(int argc,char** argv)
     "\t -f, --file              (set the file size of the puzzle)\n"
     "\t -r, --rank              (set the rank size of the puzzle)\n"
     "\t -i, --incomplete-tour   (allow an incomplete tour)\n"
+    "\t -m, --max-iterations    (maximum # of iterations before restarting)\n"
     "\t -q, --frequency         (frequency in Hz of solution display)\n"
     ;
 
@@ -30,17 +31,19 @@ int main(int argc,char** argv)
     {"incomplete-tour", no_argument, 0, 'i'},
     {"file", required_argument, 0, 'f'},
     {"rank", required_argument, 0, 'r'},
+    {"max-iterations", required_argument, 0, 'm'},
     {"frequency", required_argument, 0, 'q'},
   };
 
-  static const char *optString = "hif:r:q:";
+  static const char *optString = "hif:r:m:q:";
 
   gRank = 6;
   gFile = 6;
 
   bool requireFullTour = true;
   double frequency = 4.;
-  
+  unsigned maxIterations = 1.e5;
+
   while(1) {
     char optId = getopt_long(argc, argv,optString, longOptions, NULL);
     if(optId == -1) break;
@@ -60,6 +63,9 @@ int main(int argc,char** argv)
     case('t'):
       gRank = atoi(optarg);
       break;
+    case('m'):
+      maxIterations = atoi(optarg);
+      break;
     case('q'):
       frequency = atof(optarg);
       break;
@@ -71,6 +77,7 @@ int main(int argc,char** argv)
 
   KnightGraph graph;
   NeuralNetwork neuralNetwork;
+  neuralNetwork.SetMaxIterations(maxIterations);
   Solution solution = neuralNetwork.FindTour(graph,requireFullTour);
   PrintSolution(solution,frequency);
   
